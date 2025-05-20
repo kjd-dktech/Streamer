@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=Streamer
+Comment=Partage d'écran OBS + VLC sur le réseau local
+Exec=streamer.sh
+Icon=video-display
+Terminal=true
+Type=Application
+Categories=AudioVideo;Utility;
+StartupNotify=true
+MimeType=application/x-shellscript;
+
