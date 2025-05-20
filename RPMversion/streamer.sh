@@ -2,9 +2,6 @@
 
 FILE="/tmp/screen.mp4"
 PORT=8080
-APP_NAME="Streamer"
-DESKTOP_FILE="$HOME/.local/share/applications/streamer.desktop"
-SCRIPT_PATH="$(realpath "$0")"
 
 echo "🖥️  Lancement du partage d'écran avec OBS + VLC"
 echo "📁 Fichier d'enregistrement attendu : $FILE"
@@ -28,6 +25,7 @@ IP=$(ip -4 addr show | grep -oP '(?<=inet\s)192\.168\.\d+\.\d+' | head -n 1)
 
 if [ -z "$IP" ]; then
     echo "❌ Impossible de trouver une IP locale (192.168.x.x)"
+    echo "Assure-toi que tu es connecté à un réseau local."
     exit 1
 fi
 
@@ -45,16 +43,17 @@ if ! pgrep -x "obs" > /dev/null; then
         echo "✅ OBS lancé avec succès."
     fi
 else
-    echo "✅ OBS est déjà lancé."
+    echo "✅ OBS est déjà en cours d'exécution."
 fi
+
 
 # ✅ Attend que le fichier soit créé
 echo "⏳ En attente de l'enregistrement dans OBS..."
 while [ ! -f "$FILE" ]; do
-    sleep 3
+    sleep 5
 done
 
-echo "✅ Fichier détecté !"
+echo "✅ Fichier détecté : $FILE !"
 
 
 
@@ -72,7 +71,7 @@ echo ""
 # ✅ Lance VLC pour diffuser en HTTP
 cvlc "$FILE" --sout "#standard{access=http,mux=ts,dst=:$PORT}" --loop &
 
-sleep 3
+sleep 7
 # Vérification si VLC a bien démarré
 if ! pgrep -x "cvlc" > /dev/null; then
     echo "❌ Échec du lancement de VLC."
